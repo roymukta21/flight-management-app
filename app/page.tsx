@@ -31,22 +31,15 @@ export default async function Home({
 }) {
   const params = await searchParams;
 
-  const flights = await getFlights(
-    params.origin,
-    params.destination
-  );
+  const flights = await getFlights(params.origin, params.destination);
 
   return (
     <main className="min-h-screen bg-background text-text p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <p className="text-primary mb-2">
-            Find your next flight
-          </p>
+          <p className="text-primary mb-2">Find your next flight</p>
 
-          <h1 className="text-4xl font-bold">
-            Flight Management ✈️
-          </h1>
+          <h1 className="text-4xl font-bold">Flight Management ✈️</h1>
         </div>
 
         <form className="grid md:grid-cols-3 gap-4 mb-8">
@@ -79,9 +72,7 @@ export default async function Home({
             >
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm text-muted">
-                    {flight.flight_no}
-                  </p>
+                  <p className="text-sm text-muted">{flight.flight_no}</p>
 
                   <h2 className="text-2xl font-bold mt-1">
                     {flight.origin} → {flight.destination}
@@ -94,25 +85,11 @@ export default async function Home({
               </div>
 
               <div className="space-y-2 text-sm text-muted">
-                <p>
-                  Aircraft: {flight.aircraft_type}
-                </p>
+                <p>Aircraft: {flight.aircraft_type}</p>
 
-                <p>
-                  Departure:
-                  {" "}
-                  {new Date(
-                    flight.departs_at
-                  ).toLocaleString()}
-                </p>
+                <p>Departure: {new Date(flight.departs_at).toLocaleString()}</p>
 
-                <p>
-                  Arrival:
-                  {" "}
-                  {new Date(
-                    flight.arrives_at
-                  ).toLocaleString()}
-                </p>
+                <p>Arrival: {new Date(flight.arrives_at).toLocaleString()}</p>
               </div>
 
               <a
