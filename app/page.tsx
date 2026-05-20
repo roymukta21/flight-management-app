@@ -1,58 +1,121 @@
-import { supabase } from '@/lib/supabase'
-import { Flight } from '@/types/flight'
+import { supabase } from "@/lib/supabase";
 
-async function getFlights(): Promise<Flight[]> {
-  const { data, error } = await supabase
-    .from('flights')
-    .select('*')
+async function getFlights(origin?: string, destination?: string) {
+  let query = supabase.from("flights").select("*");
 
-  if (error) {
-    console.log(error)
-    return []
+  if (origin) {
+    query = query.ilike("origin", `%${origin}%`);
   }
 
-  return data
+  if (destination) {
+    query = query.ilike("destination", `%${destination}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.log(error);
+    return [];
+  }
+
+  return data;
 }
 
-export default async function Home() {
-  const flights = await getFlights()
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    origin?: string;
+    destination?: string;
+  }>;
+}) {
+  const params = await searchParams;
+
+  const flights = await getFlights(
+    params.origin,
+    params.destination
+  );
 
   return (
     <main className="min-h-screen bg-black text-white p-6">
-      <h1 className="text-4xl font-bold mb-8">
-        Available Flights ✈️
-      </h1>
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8">
+          Flight Management ✈️
+        </h1>
 
-      <div className="grid gap-4">
-        {flights.map((flight) => (
-          <div
-            key={flight.id}
-            className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800"
-          >
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl font-semibold">
-                  {flight.flight_no}
-                </h2>
+        <form className="grid md:grid-cols-3 gap-4 mb-8">
+          <input
+            type="text"
+            name="origin"
+            placeholder="From"
+            defaultValue={params.origin || ""}
+            className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3"
+          />
 
-                <p className="text-zinc-400">
-                  {flight.origin} → {flight.destination}
-                </p>
-              </div>
+          <input
+            type="text"
+            name="destination"
+            placeholder="To"
+            defaultValue={params.destination || ""}
+            className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3"
+          />
 
-              <div className="text-right">
-                <p className="text-yellow-400 text-2xl font-bold">
+          <button className="bg-yellow-400 text-black rounded-xl font-semibold">
+            Search
+          </button>
+        </form>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {flights.map((flight: any) => (
+            <div
+              key={flight.id}
+              className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <p className="text-sm text-zinc-400">
+                    {flight.flight_no}
+                  </p>
+
+                  <h2 className="text-2xl font-bold">
+                    {flight.origin} → {flight.destination}
+                  </h2>
+                </div>
+
+                <p className="text-yellow-400 font-bold text-xl">
                   ${flight.base_price}
                 </p>
+              </div>
 
-                <p className="text-sm text-zinc-500">
-                  {flight.aircraft_type}
+              <div className="space-y-2 text-sm text-zinc-400">
+                <p>
+                  Aircraft: {flight.aircraft_type}
+                </p>
+
+                <p>
+                  Departure:
+                  {" "}
+                  {new Date(
+                    flight.departs_at
+                  ).toLocaleString()}
+                </p>
+
+                <p>
+                  Arrival:
+                  {" "}
+                  {new Date(
+                    flight.arrives_at
+                  ).toLocaleString()}
                 </p>
               </div>
+
+              <button className="w-full mt-5 bg-yellow-400 text-black py-3 rounded-xl font-semibold">
+                Book Flight
+              </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </main>
-  )
+  );
 }
