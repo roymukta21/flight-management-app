@@ -32,6 +32,14 @@ export default async function FlightDetails({
     "3B",
     "3C",
     "3D",
+    "4A",
+    "4B",
+    "4C",
+    "4D",
+    "5A",
+    "5B",
+    "5C",
+    "5D",
   ];
 
   return (
