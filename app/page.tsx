@@ -31,12 +31,23 @@ export default async function Home({
 }) {
   const params = await searchParams;
 
-  const flights = await getFlights(params.origin, params.destination);
+  const flights = await getFlights(
+    params.origin,
+    params.destination
+  );
 
   return (
-    <main className="min-h-screen bg-black text-white p-6">
+    <main className="min-h-screen bg-background text-text p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Flight Management ✈️</h1>
+        <div className="mb-8">
+          <p className="text-primary mb-2">
+            Find your next flight
+          </p>
+
+          <h1 className="text-4xl font-bold">
+            Flight Management ✈️
+          </h1>
+        </div>
 
         <form className="grid md:grid-cols-3 gap-4 mb-8">
           <input
@@ -44,7 +55,7 @@ export default async function Home({
             name="origin"
             placeholder="From"
             defaultValue={params.origin || ""}
-            className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3"
+            className="bg-card border border-zinc-800 rounded-xl px-4 py-3 outline-none"
           />
 
           <input
@@ -52,10 +63,10 @@ export default async function Home({
             name="destination"
             placeholder="To"
             defaultValue={params.destination || ""}
-            className="bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3"
+            className="bg-card border border-zinc-800 rounded-xl px-4 py-3 outline-none"
           />
 
-          <button className="bg-yellow-400 text-black rounded-xl font-semibold">
+          <button className="bg-primary text-black rounded-xl font-semibold hover:opacity-90 transition">
             Search
           </button>
         </form>
@@ -64,37 +75,49 @@ export default async function Home({
           {flights.map((flight: any) => (
             <div
               key={flight.id}
-              className="bg-card border border-zinc-800 rounded-2xl p-5 hover:-translate-y-1 transition duration-300"
+              className="bg-card border border-zinc-800 rounded-2xl p-5 hover:-translate-y-1 hover:border-primary transition duration-300"
             >
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm text-zinc-400">{flight.flight_no}</p>
+                  <p className="text-sm text-muted">
+                    {flight.flight_no}
+                  </p>
 
-                  <h2 className="text-2xl font-bold">
+                  <h2 className="text-2xl font-bold mt-1">
                     {flight.origin} → {flight.destination}
                   </h2>
                 </div>
 
-                <p className="text-yellow-400 font-bold text-xl">
+                <p className="text-primary text-xl font-bold">
                   ${flight.base_price}
                 </p>
               </div>
 
-              <div className="space-y-2 text-sm text-zinc-400">
-                <p>Aircraft: {flight.aircraft_type}</p>
+              <div className="space-y-2 text-sm text-muted">
+                <p>
+                  Aircraft: {flight.aircraft_type}
+                </p>
 
-                <p>Departure: {new Date(flight.departs_at).toLocaleString()}</p>
+                <p>
+                  Departure:
+                  {" "}
+                  {new Date(
+                    flight.departs_at
+                  ).toLocaleString()}
+                </p>
 
-                <p>Arrival: {new Date(flight.arrives_at).toLocaleString()}</p>
+                <p>
+                  Arrival:
+                  {" "}
+                  {new Date(
+                    flight.arrives_at
+                  ).toLocaleString()}
+                </p>
               </div>
 
               <a
                 href={`/flights/${flight.id}`}
-                className="block w-full mt-5 text-center py-3 rounded-xl font-semibold transition"
-                style={{
-                  backgroundColor: "var(--primary-color)",
-                  color: "#000",
-                }}
+                className="block w-full mt-5 text-center py-3 rounded-xl font-semibold bg-primary text-black hover:opacity-90 transition"
               >
                 Book Flight
               </a>
