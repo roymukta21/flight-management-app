@@ -31,17 +31,12 @@ export default async function Home({
 }) {
   const params = await searchParams;
 
-  const flights = await getFlights(
-    params.origin,
-    params.destination
-  );
+  const flights = await getFlights(params.origin, params.destination);
 
   return (
     <main className="min-h-screen bg-black text-white p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">
-          Flight Management ✈️
-        </h1>
+        <h1 className="text-4xl font-bold mb-8">Flight Management ✈️</h1>
 
         <form className="grid md:grid-cols-3 gap-4 mb-8">
           <input
@@ -69,13 +64,11 @@ export default async function Home({
           {flights.map((flight: any) => (
             <div
               key={flight.id}
-              className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5"
+              className="bg-card border border-zinc-800 rounded-2xl p-5 hover:-translate-y-1 transition duration-300"
             >
               <div className="flex justify-between items-center mb-4">
                 <div>
-                  <p className="text-sm text-zinc-400">
-                    {flight.flight_no}
-                  </p>
+                  <p className="text-sm text-zinc-400">{flight.flight_no}</p>
 
                   <h2 className="text-2xl font-bold">
                     {flight.origin} → {flight.destination}
@@ -88,30 +81,23 @@ export default async function Home({
               </div>
 
               <div className="space-y-2 text-sm text-zinc-400">
-                <p>
-                  Aircraft: {flight.aircraft_type}
-                </p>
+                <p>Aircraft: {flight.aircraft_type}</p>
 
-                <p>
-                  Departure:
-                  {" "}
-                  {new Date(
-                    flight.departs_at
-                  ).toLocaleString()}
-                </p>
+                <p>Departure: {new Date(flight.departs_at).toLocaleString()}</p>
 
-                <p>
-                  Arrival:
-                  {" "}
-                  {new Date(
-                    flight.arrives_at
-                  ).toLocaleString()}
-                </p>
+                <p>Arrival: {new Date(flight.arrives_at).toLocaleString()}</p>
               </div>
 
-              <button className="w-full mt-5 bg-yellow-400 text-black py-3 rounded-xl font-semibold">
+              <a
+                href={`/flights/${flight.id}`}
+                className="block w-full mt-5 text-center py-3 rounded-xl font-semibold transition"
+                style={{
+                  backgroundColor: "var(--primary-color)",
+                  color: "#000",
+                }}
+              >
                 Book Flight
-              </button>
+              </a>
             </div>
           ))}
         </div>
