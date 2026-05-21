@@ -5,10 +5,10 @@ import { supabase } from "@/lib/supabase";
 
 type BookingFormProps = {
   selectedSeat: string;
-   flightId: string;
+  flightId: string;
 };
 
-const BookingForm = ({ selectedSeat }: BookingFormProps) => {
+const BookingForm = ({ selectedSeat, flightId }: BookingFormProps) => {
   const [fullName, setFullName] = useState("");
   const [passportNo, setPassportNo] = useState("");
   const [nationality, setNationality] = useState("");
@@ -26,6 +26,7 @@ const BookingForm = ({ selectedSeat }: BookingFormProps) => {
           total_price: 0,
           pnr_code: pnrCode,
           seat_number: selectedSeat,
+          flight_id: flightId,
         },
       ])
       .select()
