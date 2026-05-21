@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import BookingForm from "./BookingForm";
 
 const seats = [
   "1A", "1B", "1C", "1D",
@@ -9,6 +10,8 @@ const seats = [
   "4A", "4B", "4C", "4D",
   "5A", "5B", "5C", "5D",
 ];
+
+const TypedBookingForm = BookingForm as React.ComponentType<{ selectedSeat: string }>;
 
 const SeatSelector = () => {
   const [selectedSeat, setSelectedSeat] = useState("");
@@ -31,21 +34,7 @@ const SeatSelector = () => {
         ))}
       </div>
 
-      {selectedSeat && (
-        <div className="mt-6 bg-card border border-zinc-800 rounded-2xl p-5">
-          <p className="text-muted text-sm">
-            Selected Seat
-          </p>
-
-          <h2 className="text-2xl font-bold text-primary mt-1">
-            {selectedSeat}
-          </h2>
-
-          <button className="w-full mt-5 bg-primary text-black py-3 rounded-xl font-semibold hover:opacity-90 transition">
-            Continue Booking
-          </button>
-        </div>
-      )}
+      {selectedSeat && <TypedBookingForm selectedSeat={selectedSeat} />}
     </div>
   );
 };
