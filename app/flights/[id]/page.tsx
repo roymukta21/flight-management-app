@@ -20,52 +20,90 @@ export default async function FlightDetails({
   const flight = await getFlight(id);
 
   const seats = [
-    "1A",
-    "1B",
-    "1C",
-    "1D",
-    "2A",
-    "2B",
-    "2C",
-    "2D",
-    "3A",
-    "3B",
-    "3C",
-    "3D",
-    "4A",
-    "4B",
-    "4C",
-    "4D",
-    "5A",
-    "5B",
-    "5C",
-    "5D",
+    "1A", "1B", "1C", "1D",
+    "2A", "2B", "2C", "2D",
+    "3A", "3B", "3C", "3D",
+    "4A", "4B", "4C", "4D",
+    "5A", "5B", "5C", "5D",
   ];
 
   return (
-    <main className="min-h-screen bg-black text-white p-6">
+    <main className="min-h-screen bg-background text-text p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-2">
-          {flight.origin} → {flight.destination}
-        </h1>
+        <div className="mb-8">
+          <p className="text-primary mb-2">
+            Flight Details
+          </p>
 
-        <p className="text-zinc-400 mb-8">{flight.flight_no}</p>
+          <h1 className="text-4xl font-bold">
+            {flight.origin} → {flight.destination}
+          </h1>
 
-        <div className="bg-zinc-900 rounded-3xl p-6">
-          <h2 className="text-2xl font-semibold mb-6">Select Your Seat</h2>
+          <p className="text-muted mt-2">
+            {flight.flight_no}
+          </p>
+        </div>
 
-          <div className="grid grid-cols-4 gap-4 max-w-md">
-            {seats.map((seat, index) => (
+        <div className="bg-card border border-zinc-800 rounded-3xl p-6 mb-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-muted text-sm mb-1">
+                Departure
+              </p>
+
+              <h3 className="text-xl font-semibold">
+                {new Date(
+                  flight.departs_at
+                ).toLocaleString()}
+              </h3>
+            </div>
+
+            <div>
+              <p className="text-muted text-sm mb-1">
+                Arrival
+              </p>
+
+              <h3 className="text-xl font-semibold">
+                {new Date(
+                  flight.arrives_at
+                ).toLocaleString()}
+              </h3>
+            </div>
+
+            <div>
+              <p className="text-muted text-sm mb-1">
+                Aircraft
+              </p>
+
+              <h3 className="text-xl font-semibold">
+                {flight.aircraft_type}
+              </h3>
+            </div>
+
+            <div>
+              <p className="text-muted text-sm mb-1">
+                Ticket Price
+              </p>
+
+              <h3 className="text-xl font-semibold text-primary">
+                ${flight.base_price}
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-card border border-zinc-800 rounded-3xl p-6">
+          <h2 className="text-2xl font-bold mb-6">
+            Select Your Seat
+          </h2>
+
+          <div className="grid grid-cols-4 gap-4">
+            {seats.map((seat) => (
               <button
                 key={seat}
-                className={`
-        py-4 rounded-xl font-semibold transition
-        bg-zinc-800 hover:bg-primary hover:text-black
-      `}
+                className="bg-secondary border border-zinc-700 rounded-xl py-4 font-semibold hover:bg-primary hover:text-black transition"
               >
                 {seat}
-
-                {(index + 1) % 2 === 0 && <span className="mx-2"></span>}
               </button>
             ))}
           </div>
