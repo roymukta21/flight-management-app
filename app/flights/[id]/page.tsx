@@ -91,7 +91,7 @@ const page = async ({
             Select Your Seat
           </h2>
 
-          <SeatSelector />
+          <SeatSelector flightId={flight.id} />
         </div>
       </div>
     </main>

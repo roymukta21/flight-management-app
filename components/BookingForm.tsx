@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 
 type BookingFormProps = {
   selectedSeat: string;
+   flightId: string;
 };
 
 const BookingForm = ({ selectedSeat }: BookingFormProps) => {
