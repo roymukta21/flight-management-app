@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 type BookingFormProps = {
   selectedSeat: string;
@@ -9,6 +10,7 @@ type BookingFormProps = {
 };
 
 const BookingForm = ({ selectedSeat, flightId }: BookingFormProps) => {
+  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [passportNo, setPassportNo] = useState("");
   const [nationality, setNationality] = useState("");
@@ -22,11 +24,11 @@ const BookingForm = ({ selectedSeat, flightId }: BookingFormProps) => {
       .from("bookings")
       .insert([
         {
+          flight_id: flightId,
+          seat_number: selectedSeat,
           status: "confirmed",
           total_price: 0,
           pnr_code: pnrCode,
-          seat_number: selectedSeat,
-          flight_id: flightId,
         },
       ])
       .select()
@@ -51,7 +53,7 @@ const BookingForm = ({ selectedSeat, flightId }: BookingFormProps) => {
       return;
     }
 
-    alert(`Booking successful. Your PNR is ${pnrCode}`);
+    router.push(`/bookings/${booking.id}`);
   };
 
   return (
