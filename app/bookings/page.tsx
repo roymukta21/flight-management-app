@@ -41,7 +41,7 @@ export default function BookingsPage() {
       .order("booked_at", { ascending: false });
 
     if (!error && data) {
-      setBookings(data as Booking[]);
+      setBookings(data || []);
     }
 
     setLoading(false);
