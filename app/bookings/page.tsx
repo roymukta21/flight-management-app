@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { useFlightStore } from "@/store/useFlightStore";
-import { useUserStore } from "@/store/useUserStore";
 import Link from "next/link";
 
 type Booking = {
@@ -31,8 +29,6 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
-  const { resetBooking } = useFlightStore();
-  const { setCachedBookings } = useUserStore();
 
   const fetchBookings = async () => {
     const { data, error } = await supabase
@@ -46,15 +42,8 @@ export default function BookingsPage() {
 
     if (!error && data) {
       setBookings(data as Booking[]);
-      setCachedBookings(
-        data.map((b) => ({
-          id: b.id,
-          pnr_code: b.pnr_code,
-          status: b.status,
-          flight_id: "",
-        }))
-      );
     }
+
     setLoading(false);
   };
 
@@ -64,8 +53,7 @@ export default function BookingsPage() {
 
   const handleCancel = async (bookingId: string, departsAt: string) => {
     const departureTime = new Date(departsAt).getTime();
-    const now = Date.now();
-    const diffHours = (departureTime - now) / (1000 * 60 * 60);
+    const diffHours = (departureTime - Date.now()) / (1000 * 60 * 60);
 
     if (diffHours < 2) {
       alert("Cannot cancel within 2 hours of departure!");
@@ -73,8 +61,9 @@ export default function BookingsPage() {
     }
 
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this booking? This action cannot be undone."
+      "Are you sure you want to cancel this booking?"
     );
+
     if (!confirmed) return;
 
     setCancellingId(bookingId);
@@ -87,7 +76,6 @@ export default function BookingsPage() {
     if (error) {
       alert(error.message);
     } else {
-      resetBooking();
       await fetchBookings();
     }
 
@@ -96,28 +84,27 @@ export default function BookingsPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#09090b] text-white p-6">
-        <div className="max-w-5xl mx-auto">
-          <div className="animate-pulse text-[#a1a1aa] text-center py-20">
-            Loading bookings...
-          </div>
+      <main className="min-h-screen bg-background text-text p-6">
+        <div className="max-w-5xl mx-auto text-muted text-center py-20">
+          Loading bookings...
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-white p-6">
+    <main className="min-h-screen bg-background text-text p-6">
       <div className="max-w-5xl mx-auto">
-        <p className="text-[#d8b010] mb-2">My Trips</p>
+        <p className="text-primary mb-2">My Trips</p>
         <h1 className="text-4xl font-bold mb-8">Booking History</h1>
 
         {bookings.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-[#a1a1aa] text-lg mb-4">No bookings found.</p>
+            <p className="text-muted text-lg mb-4">No bookings found.</p>
+
             <Link
               href="/"
-              className="bg-[#d8b010] text-black px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition"
+              className="bg-primary text-black px-6 py-3 rounded-xl font-semibold"
             >
               Search Flights
             </Link>
@@ -127,18 +114,20 @@ export default function BookingsPage() {
             {bookings.map((booking) => (
               <div
                 key={booking.id}
-                className="bg-[#131001] border border-zinc-800 rounded-2xl p-5"
+                className="bg-card border border-zinc-800 rounded-2xl p-5"
               >
                 <div className="flex items-center justify-between mb-5">
                   <div>
-                    <p className="text-sm text-[#a1a1aa]">PNR Code</p>
-                    <h2 className="text-2xl font-bold text-[#d8b010]">
+                    <p className="text-sm text-muted">PNR Code</p>
+
+                    <h2 className="text-2xl font-bold text-primary">
                       {booking.pnr_code}
                     </h2>
                   </div>
+
                   <span
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold border ${
-                      statusColors[booking.status] ??
+                      statusColors[booking.status] ||
                       "bg-zinc-800 text-zinc-400 border-zinc-700"
                     }`}
                   >
@@ -146,7 +135,7 @@ export default function BookingsPage() {
                   </span>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-3 text-sm text-[#a1a1aa] mb-5">
+                <div className="grid md:grid-cols-2 gap-3 text-sm text-muted mb-5">
                   <p>Flight: {booking.flights?.flight_no}</p>
                   <p>Seat: {booking.seat_number}</p>
                   <p>
@@ -166,7 +155,7 @@ export default function BookingsPage() {
                 <div className="flex gap-3 flex-wrap">
                   <Link
                     href={`/bookings/${booking.id}`}
-                    className="bg-[#d8b010] text-black px-5 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition"
+                    className="bg-primary text-black px-5 py-2.5 rounded-xl font-semibold text-sm"
                   >
                     View Ticket
                   </Link>
@@ -177,9 +166,11 @@ export default function BookingsPage() {
                         handleCancel(booking.id, booking.flights?.departs_at)
                       }
                       disabled={cancellingId === booking.id}
-                      className="bg-red-950 border border-red-800 text-red-400 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-red-900 transition disabled:opacity-50"
+                      className="bg-red-950 border border-red-800 text-red-400 px-5 py-2.5 rounded-xl font-semibold text-sm disabled:opacity-50"
                     >
-                      {cancellingId === booking.id ? "Cancelling..." : "Cancel Booking"}
+                      {cancellingId === booking.id
+                        ? "Cancelling..."
+                        : "Cancel Booking"}
                     </button>
                   )}
                 </div>
