@@ -15,21 +15,24 @@ type Seat = {
 
 const classStyles = {
   first: {
-    available: "bg-amber-950 border-amber-600 hover:bg-amber-600 hover:text-black text-amber-400",
+    available:
+      "bg-amber-950 border-amber-600 hover:bg-amber-600 hover:text-black text-amber-400",
     selected: "bg-amber-500 text-black border-amber-400",
     booked: "bg-zinc-800 text-zinc-600 border-zinc-700 cursor-not-allowed",
     label: "First Class",
     color: "bg-amber-500",
   },
   business: {
-    available: "bg-blue-950 border-blue-600 hover:bg-blue-600 hover:text-black text-blue-400",
+    available:
+      "bg-blue-950 border-blue-600 hover:bg-blue-600 hover:text-black text-blue-400",
     selected: "bg-blue-500 text-black border-blue-400",
     booked: "bg-zinc-800 text-zinc-600 border-zinc-700 cursor-not-allowed",
     label: "Business",
     color: "bg-blue-500",
   },
   economy: {
-    available: "bg-secondary border-zinc-700 hover:bg-[#d8b010] hover:text-black text-white",
+    available:
+      "bg-secondary border-zinc-700 hover:bg-[#d8b010] hover:text-black text-white",
     selected: "bg-[#d8b010] text-black border-[#d8b010]",
     booked: "bg-zinc-800 text-zinc-600 border-zinc-700 cursor-not-allowed",
     label: "Economy",
@@ -70,9 +73,11 @@ const SeatSelector = ({ flightId }: { flightId: string }) => {
         },
         (payload) => {
           setSeats((prev) =>
-            prev.map((s) => (s.id === payload.new.id ? { ...s, ...payload.new } : s))
+            prev.map((s) =>
+              s.id === payload.new.id ? { ...s, ...payload.new } : s,
+            ),
           );
-        }
+        },
       )
       .subscribe();
 
@@ -85,13 +90,18 @@ const SeatSelector = ({ flightId }: { flightId: string }) => {
   const business = seats.filter((s) => s.class === "business");
   const economy = seats.filter((s) => s.class === "economy");
 
-  const renderZone = (zoneSeats: Seat[], zone: "first" | "business" | "economy") => {
+  const renderZone = (
+    zoneSeats: Seat[],
+    zone: "first" | "business" | "economy",
+  ) => {
     const style = classStyles[zone];
     return (
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <div className={`w-3 h-3 rounded-full ${style.color}`} />
-          <span className="text-sm font-semibold text-white">{style.label}</span>
+          <span className="text-sm font-semibold text-white">
+            {style.label}
+          </span>
           {zone !== "economy" && (
             <span className="text-xs text-zinc-500">
               +${zoneSeats[0]?.extra_fee ?? 0} extra
@@ -113,8 +123,8 @@ const SeatSelector = ({ flightId }: { flightId: string }) => {
                   isBooked
                     ? style.booked
                     : isSelected
-                    ? style.selected
-                    : style.available
+                      ? style.selected
+                      : style.available
                 }`}
               >
                 {seat.seat_number}
@@ -150,16 +160,20 @@ const SeatSelector = ({ flightId }: { flightId: string }) => {
           <span className="w-4 h-4 rounded bg-[#d8b010]" /> Selected
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-4 h-4 rounded bg-zinc-800 border border-zinc-700" /> Occupied
+          <span className="w-4 h-4 rounded bg-zinc-800 border border-zinc-700" />{" "}
+          Occupied
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-4 h-4 rounded bg-amber-950 border border-amber-600" /> First Class
+          <span className="w-4 h-4 rounded bg-amber-950 border border-amber-600" />{" "}
+          First Class
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-4 h-4 rounded bg-blue-950 border border-blue-600" /> Business
+          <span className="w-4 h-4 rounded bg-blue-950 border border-blue-600" />{" "}
+          Business
         </span>
         <span className="flex items-center gap-1">
-          <span className="w-4 h-4 rounded bg-secondary border border-zinc-700" /> Economy
+          <span className="w-4 h-4 rounded bg-secondary border border-zinc-700" />{" "}
+          Economy
         </span>
       </div>
 
@@ -174,6 +188,7 @@ const SeatSelector = ({ flightId }: { flightId: string }) => {
         <BookingForm
           selectedSeat={selectedSeat.seat_number}
           flightId={flightId}
+          seatId={selectedSeat.id}
         />
       )}
     </div>
