@@ -43,7 +43,7 @@ export default function BookingsPage() {
       .order("booked_at", { ascending: false });
 
     if (!error && data) {
-      setBookings(data || []);
+      setBookings(data as unknown as Booking[]);
     }
 
     setLoading(false);
@@ -149,7 +149,9 @@ export default function BookingsPage() {
                   <p>
                     Departure:{" "}
                     {booking.flights?.[0]?.departs_at
-                      ? new Date(booking.flights.departs_at).toLocaleString()
+                      ? new Date(
+                          booking.flights?.[0]?.departs_at,
+                        ).toLocaleString()
                       : "N/A"}
                   </p>
                 </div>
