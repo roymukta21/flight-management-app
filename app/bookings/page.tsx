@@ -16,7 +16,7 @@ type Booking = {
     origin: string;
     destination: string;
     departs_at: string;
-  };
+  }[];
 };
 
 const statusColors: Record<string, string> = {
@@ -33,11 +33,13 @@ export default function BookingsPage() {
   const fetchBookings = async () => {
     const { data, error } = await supabase
       .from("bookings")
-      .select(`
+      .select(
+        `
         id, pnr_code, seat_number, status, booked_at,
         passengers (full_name, nationality),
         flights (flight_no, origin, destination, departs_at)
-      `)
+      `,
+      )
       .order("booked_at", { ascending: false });
 
     if (!error && data) {
@@ -61,7 +63,7 @@ export default function BookingsPage() {
     }
 
     const confirmed = window.confirm(
-      "Are you sure you want to cancel this booking?"
+      "Are you sure you want to cancel this booking?",
     );
 
     if (!confirmed) return;
@@ -136,17 +138,17 @@ export default function BookingsPage() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-3 text-sm text-muted mb-5">
-                  <p>Flight: {booking.flights?.flight_no}</p>
+                  <p>Flight: {booking.flights?.[0]?.flight_no}</p>
                   <p>Seat: {booking.seat_number}</p>
                   <p>
-                    Route: {booking.flights?.origin} →{" "}
-                    {booking.flights?.destination}
+                    Route: {booking.flights?.[0]?.origin} →{" "}
+                    {booking.flights?.[0]?.destination}
                   </p>
                   <p>Passenger: {booking.passengers?.[0]?.full_name}</p>
                   <p>Nationality: {booking.passengers?.[0]?.nationality}</p>
                   <p>
                     Departure:{" "}
-                    {booking.flights?.departs_at
+                    {booking.flights?.[0]?.departs_at
                       ? new Date(booking.flights.departs_at).toLocaleString()
                       : "N/A"}
                   </p>
@@ -163,7 +165,10 @@ export default function BookingsPage() {
                   {booking.status === "confirmed" && (
                     <button
                       onClick={() =>
-                        handleCancel(booking.id, booking.flights?.departs_at)
+                        handleCancel(
+                          booking.id,
+                          booking.flights?.[0]?.departs_at,
+                        )
                       }
                       disabled={cancellingId === booking.id}
                       className="bg-red-950 border border-red-800 text-red-400 px-5 py-2.5 rounded-xl font-semibold text-sm disabled:opacity-50"

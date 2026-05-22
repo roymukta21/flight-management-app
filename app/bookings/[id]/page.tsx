@@ -3,7 +3,8 @@ import { supabase } from "@/lib/supabase";
 const getBooking = async (id: string) => {
   const { data } = await supabase
     .from("bookings")
-    .select(`
+    .select(
+      `
       id,
       pnr_code,
       seat_number,
@@ -22,18 +23,15 @@ const getBooking = async (id: string) => {
         arrives_at,
         aircraft_type
       )
-    `)
+    `,
+    )
     .eq("id", id)
     .single();
 
   return data;
 };
 
-const page = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
+const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
   const booking: any = await getBooking(id);
 
@@ -67,7 +65,7 @@ const page = async ({
             <div>
               <p className="text-muted text-sm">Flight</p>
               <h3 className="text-xl font-semibold">
-                {booking.flights?.flight_no}
+                {booking.flights?.[0]?.flight_no}
               </h3>
             </div>
 
@@ -81,21 +79,21 @@ const page = async ({
             <div>
               <p className="text-muted text-sm">From</p>
               <h3 className="text-2xl font-bold">
-                {booking.flights?.origin}
+                {booking.flights?.[0]?.origin}
               </h3>
             </div>
 
             <div>
               <p className="text-muted text-sm">To</p>
               <h3 className="text-2xl font-bold">
-                {booking.flights?.destination}
+                {booking.flights?.[0]?.destination}
               </h3>
             </div>
 
             <div>
               <p className="text-muted text-sm">Aircraft</p>
               <h3 className="text-xl font-semibold">
-                {booking.flights?.aircraft_type}
+                {booking.flights?.[0]?.aircraft_type}
               </h3>
             </div>
           </div>
@@ -104,14 +102,14 @@ const page = async ({
             <div>
               <p className="text-muted text-sm">Departure</p>
               <h3 className="text-lg font-semibold">
-                {new Date(booking.flights?.departs_at).toLocaleString()}
+                {new Date(booking.flights?.[0]?.departs_at).toLocaleString()}
               </h3>
             </div>
 
             <div>
               <p className="text-muted text-sm">Arrival</p>
               <h3 className="text-lg font-semibold">
-                {new Date(booking.flights?.arrives_at).toLocaleString()}
+                {new Date(booking.flights?.[0]?.arrives_at).toLocaleString()}
               </h3>
             </div>
           </div>
