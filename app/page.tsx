@@ -1,6 +1,10 @@
 import { supabase } from "@/lib/supabase";
 
-async function getFlights(origin?: string, destination?: string) {
+async function getFlights(
+  origin?: string,
+  destination?: string,
+  date?: string,
+) {
   let query = supabase.from("flights").select("*");
 
   if (origin) {
@@ -9,6 +13,12 @@ async function getFlights(origin?: string, destination?: string) {
 
   if (destination) {
     query = query.ilike("destination", `%${destination}%`);
+  }
+
+  if (date) {
+    query = query
+      .gte("departs_at", `${date}T00:00:00`)
+      .lte("departs_at", `${date}T23:59:59`);
   }
 
   const { data, error } = await query;
@@ -27,22 +37,26 @@ export default async function Home({
   searchParams: Promise<{
     origin?: string;
     destination?: string;
+    date?: string;
   }>;
 }) {
   const params = await searchParams;
 
-  const flights = await getFlights(params.origin, params.destination);
+  const flights = await getFlights(
+    params.origin,
+    params.destination,
+    params.date,
+  );
 
   return (
     <main className="min-h-screen bg-background text-text p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <p className="text-primary mb-2">Find your next flight</p>
-
           <h1 className="text-4xl font-bold">Flight Management ✈️</h1>
         </div>
 
-        <form className="grid md:grid-cols-3 gap-4 mb-8">
+        <form className="grid md:grid-cols-4 gap-4 mb-8">
           <input
             type="text"
             name="origin"
@@ -56,6 +70,13 @@ export default async function Home({
             name="destination"
             placeholder="To"
             defaultValue={params.destination || ""}
+            className="bg-card border border-zinc-800 rounded-xl px-4 py-3 outline-none"
+          />
+
+          <input
+            type="date"
+            name="date"
+            defaultValue={params.date || ""}
             className="bg-card border border-zinc-800 rounded-xl px-4 py-3 outline-none"
           />
 
@@ -86,9 +107,7 @@ export default async function Home({
 
               <div className="space-y-2 text-sm text-muted">
                 <p>Aircraft: {flight.aircraft_type}</p>
-
                 <p>Departure: {new Date(flight.departs_at).toLocaleString()}</p>
-
                 <p>Arrival: {new Date(flight.arrives_at).toLocaleString()}</p>
               </div>
 
