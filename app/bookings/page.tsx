@@ -180,6 +180,12 @@ export default function BookingsPage() {
                         : "Cancel Booking"}
                     </button>
                   )}
+                  <Link
+                    href={`/reschedule/${booking.id}`}
+                    className="bg-blue-900 border border-blue-700 text-blue-400 px-5 py-2.5 rounded-xl font-semibold text-sm"
+                  >
+                    Reschedule
+                  </Link>
                 </div>
               </div>
             ))}
