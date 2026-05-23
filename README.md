@@ -117,7 +117,8 @@ Only the session tokens are persisted — cached bookings are always re-fetched 
 
 ## Trade-offs & What I'd Do Differently
 
-- **Auth not fully implemented** — Supabase Auth is configured but login/signup UI is not complete. Given more time, I would add a proper auth flow with protected routes.
-- **Reschedule UI** — the `reschedules` table and RPC are in place but the frontend reschedule flow is incomplete. I would add a modal to pick an alternative flight on the same route.
-- **PWA** — would configure `next-pwa` with StaleWhileRevalidate for flight results and CacheFirst for static assets, and add an offline fallback page.
-- **TypeScript** — some `any` types remain in the codebase that I would replace with proper types given more time.
+- **Auth not fully implemented** — Supabase Auth is configured but login/signup UI is not complete. Given more time, I would add a proper auth flow with protected routes and redirect unauthenticated users away from the bookings page.
+- **Reschedule UI** — the `reschedules` table and DB trigger are in place but the frontend reschedule flow is incomplete. I would add a modal to pick an alternative flight on the same route and automatically calculate the fee difference.
+- **PWA setup was planned as a bonus feature, but it was not completed due to time constraints. The main focus was kept on the core booking flow, seat selection, booking history, cancellation, and rescheduling features.** Given more time, I would configure `next-pwa` with StaleWhileRevalidate for flight search results and CacheFirst for static assets, and add an offline fallback page.
+- **Date & passenger count filter** — the search form currently filters by origin and destination only. Adding a date picker and passenger count selector would make the search more realistic.
+- **TypeScript** — some `any` types remain in the codebase that I would replace with proper typed interfaces given more time.
