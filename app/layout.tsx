@@ -1,5 +1,6 @@
-import Link from "next/link";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 export default function RootLayout({
   children,
@@ -9,26 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <nav className="border-b border-zinc-800 bg-card">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-primary">
-              Flight App ✈️
-            </Link>
-
-            <div className="flex items-center gap-4">
-              <Link href="/" className="text-muted hover:text-white transition">
-                Flights
-              </Link>
-
-              <Link
-                href="/bookings"
-                className="text-muted hover:text-white transition"
-              >
-                Bookings
-              </Link>
-            </div>
-          </div>
-        </nav>
+        <Navbar />
 
         {children}
 
@@ -47,36 +29,18 @@ export default function RootLayout({
               <Link href="/" className="hover:text-white transition">
                 Homepage
               </Link>
-
-              <a href="/bookings" className="hover:text-white transition">
+              <Link href="/bookings" className="hover:text-white transition">
                 Bookings
-              </a>
-
-              <a href="#" className="hover:text-white transition">
-                Services
-              </a>
-
-              <a href="#" className="hover:text-white transition">
-                Contact
-              </a>
+              </Link>
+              <a href="#" className="hover:text-white transition">Services</a>
+              <a href="#" className="hover:text-white transition">Contact</a>
             </div>
 
             <div className="flex items-center gap-5 text-2xl text-muted">
-              <a href="#" className="hover:text-primary transition">
-                ✈️
-              </a>
-
-              <a href="#" className="hover:text-primary transition">
-                🌍
-              </a>
-
-              <a href="#" className="hover:text-primary transition">
-                📍
-              </a>
-
-              <a href="#" className="hover:text-primary transition">
-                ☁️
-              </a>
+              <a href="#" className="hover:text-primary transition">✈️</a>
+              <a href="#" className="hover:text-primary transition">🌍</a>
+              <a href="#" className="hover:text-primary transition">📍</a>
+              <a href="#" className="hover:text-primary transition">☁️</a>
             </div>
 
             <p className="text-xs text-zinc-600 mt-10">
